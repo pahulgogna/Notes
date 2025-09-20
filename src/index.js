@@ -1,3 +1,6 @@
+let localStorageLocation = "notes";
+
+var SelectedNote = null;
 
 class NotesManager {
 
@@ -40,7 +43,9 @@ class NotesManager {
   }
 
   serialize() {
-    return JSON.stringify(this.root.serialize());
+    let serialized = JSON.stringify(this.root.serialize());
+    localStorage.setItem(localStorageLocation, serialized);
+    return serialized;
   }
 
   // deserialize the json string to form the notes hierarchy from it.
@@ -49,11 +54,19 @@ class NotesManager {
     return this.root;
   }
 
+  getNote(id) {
+    if (!id || !this.noteMap[id]) return;
+    return this.noteMap[id];
+  }
+
+  getHTMLChildren() {
+    return this.root.getHTMLChildren();
+  }
 }
 
 class Note {
 
-  noteId;
+  noteId
   title
   body
   children // Child Notes
@@ -148,23 +161,101 @@ class Note {
     return noteMap[note.noteId];
   }
 
-}
-
-const testElement = document.getElementById("test");
-if (testElement !== null) {
-  setTimeout(() => {
-    testElement.innerText = "this is a test update from typescript.";
-  }, 1000)
-}
-
-let nm = NotesManager.getInstance();
-
-for (let i = 0; i < 5; i++) {
-  for (let j = 0; j < 5; j++) {
-    nm.addChildNoteTo(i, "note " + j, "test body");
+  getHTMLChildren() {
+    return this.children.map((ch) => {
+      return `
+      <div class="pl-3 mt-1" id="${ch.noteId}">
+          <div class="flex gap-1 flex-nowrap">
+            <div onclick="expandContractChildren(${ch.noteId}, ${this.noteId})" class="cursor-pointer"> > </div>
+            <h3 class="hover:bg-slate-700 rounded px-1 text-nowrap cursor-pointer" onclick="selectNote(${ch.noteId})"> ${ch.title}</h3>
+          </div>
+          <div id='${ch.noteId}-children'>
+          </div>
+      </div>`
+    }).join("");
   }
 }
 
-let st = nm.serialize();
+// setup
+let nm = NotesManager.getInstance();
 
-console.log(nm.deserialize(st));
+if (localStorage.getItem(localStorageLocation) != null) {
+  nm.deserialize(localStorage.getItem(localStorageLocation));
+} else {
+
+  // dummy data
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+      nm.addChildNoteTo(i, "note " + j, "test body");
+      // for (let k = 0; k < 5; k++) {
+      //   nm.addChildNoteTo(j, "note " + k, "test body");
+      // }
+    }
+  }
+
+  console.log("[MESSSGE] notes serialized");
+  nm.serialize();
+}
+
+const testElement = document.getElementById("0-children");
+if (testElement !== null) {
+  testElement.innerHTML = nm.getHTMLChildren();
+}
+
+function hi() {
+  console.log("hi");
+}
+
+function expandContractChildren(noteId) {
+
+  if (nm.noteMap[noteId] == null) {
+    return null;
+  }
+
+  let id = `${noteId}-children`;
+
+  let innerHtml = document.getElementById(id).innerHTML;
+
+  // toggle functionality.
+  if (!innerHtml){
+    let html = nm.noteMap[noteId].getHTMLChildren();
+    document.getElementById(id).innerHTML = html;
+  } else {
+    document.getElementById(id).innerHTML = "";
+  }
+}
+
+function selectNote(id) {
+
+  if (!id) return;
+
+  let note = nm.getNote(id);
+
+  let titleElement = document.getElementById("selectedNoteTitle");
+  let bodyElement = document.getElementById("selectedNoteBody");
+
+  if (titleElement && bodyElement) {
+    titleElement.innerText = note.title;
+    bodyElement.innerText = note.body;
+    
+    SelectedNote = note;
+
+    document.getElementById("save-button").style = ""
+  }
+}
+
+function saveNotes() {
+  nm.serialize();
+}
+
+// update SelectedNote values on changes made to div
+const selectedNoteBody = document.getElementById("selectedNoteBody");
+const selectedNoteTitle = document.getElementById("selectedNoteTitle");
+
+selectedNoteBody.addEventListener("blur", () => {
+  SelectedNote.body = selectedNoteBody.innerText;
+});
+
+selectedNoteTitle.addEventListener("blur", () => {
+  SelectedNote.title = selectedNoteTitle.innerText;
+});

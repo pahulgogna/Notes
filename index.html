@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS + HTML Example</title>
+  <script src="./src/index.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
-  <div id="test"></div>
-  <script type="module" src="./src/index.js"></script>
+
+  <div class="grid grid-cols-6 bg-slate-950 text-white h-screen">
+
+    <div class="col-span-1 m-x-2 overflow-auto" id="notesList" class="">
+      <h2 class="pl-3 border-b-2 p-2 mb-2 font-semibold">
+        Notes
+      </h2>
+      <div id="0-children"></div>
+    </div>
+  
+    <div id="selectedNote" class="bg-slate-900 px-10 flex flex-col gap-10 pt-5 border-l-2 col-span-5">
+      
+      <div class="flex justify-end">
+        <button id="save-button" onclick="saveNotes()" class="rounded px-2 p-1 bg-slate-600 hover:bg-slate-700 m-0" style="visibility: hidden;">Save</button>
+      </div>
+      <h2 contenteditable class="focus:border-0 text-3xl font-semibold" id="selectedNoteTitle">
+        
+      </h2>
+      <p class="" contenteditable id="selectedNoteBody">
+      </p>
+    </div>
+  </div>
+
 </body>
+
 </html>
