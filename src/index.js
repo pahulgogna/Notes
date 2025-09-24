@@ -12,9 +12,9 @@ class NotesManager {
   constructor() {
     this.root = new Note({
       noteId: 0,
-      title: "", 
-      body : "", 
-      children : []
+      title: "",
+      body: "",
+      children: []
     });
 
     this.noteMap = {}
@@ -32,9 +32,9 @@ class NotesManager {
   addChildNoteTo(id, title, body) {
 
     let note = new Note({
-      noteId: this.n, 
-      title: title, 
-      body: body, 
+      noteId: this.n,
+      title: title,
+      body: body,
       children: []
     });
 
@@ -72,12 +72,12 @@ class Note {
   children // Child Notes
 
   constructor({
-      noteId,
-      title,
-      body,
-      children
-    }) {
-    
+    noteId,
+    title,
+    body,
+    children
+  }) {
+
     this.noteId = noteId;
     this.title = title;
     this.body = body;
@@ -150,13 +150,13 @@ class Note {
     }
 
     let note = JSON.parse(noteString);
-    
+
     if (note.children.length === 0) {
       return null;
-      }
+    }
 
     note.children = JSON.parse(note.children).map((c) => this.deserialize(c, noteMap)).filter((n) => n != null);
-      
+
     noteMap[note.noteId] = new Note(note);
     return noteMap[note.noteId];
   }
@@ -164,14 +164,13 @@ class Note {
   getHTMLChildren() {
     return this.children.map((ch) => {
       return `
-      <div class="pl-3 mt-1" id="${ch.noteId}">
-          <div class="flex gap-1 flex-nowrap">
-            <div onclick="expandContractChildren(${ch.noteId}, ${this.noteId})" class="cursor-pointer"> > </div>
-            <h3 class="hover:bg-slate-700 rounded px-1 text-nowrap cursor-pointer" onclick="selectNote(${ch.noteId})"> ${ch.title}</h3>
-          </div>
-          <div id='${ch.noteId}-children'>
-          </div>
-      </div>`
+      <div class="note-item" id="${ch.noteId}">
+        <div class="note-item-header">
+          <div onclick="expandContractChildren(${ch.noteId}, ${this.noteId})" class="expand-toggle"> > </div>
+          <h3 class="note-item-title" onclick="selectNote(${ch.noteId})">${ch.title}</h3>
+        </div>
+        <div id='${ch.noteId}-children'></div>
+      </div>`;
     }).join("");
   }
 }
@@ -217,7 +216,7 @@ function expandContractChildren(noteId) {
   let innerHtml = document.getElementById(id).innerHTML;
 
   // toggle functionality.
-  if (!innerHtml){
+  if (!innerHtml) {
     let html = nm.noteMap[noteId].getHTMLChildren();
     document.getElementById(id).innerHTML = html;
   } else {
@@ -237,7 +236,7 @@ function selectNote(id) {
   if (titleElement && bodyElement) {
     titleElement.innerText = note.title;
     bodyElement.innerText = note.body;
-    
+
     SelectedNote = note;
 
     document.getElementById("save-button").style = ""

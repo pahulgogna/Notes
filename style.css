@@ -1,0 +1,94 @@
+/* General layout */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  color: white;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  height: 100vh;
+  background-color: #0f172a; /* slate-950 */
+}
+
+/* Sidebar */
+.sidebar {
+  overflow-y: auto;
+  border-right: 2px solid #1e293b; /* darker border */
+  padding: 0;
+}
+
+.sidebar-title {
+  padding: 10px 15px;
+  margin: 0 0 10px 0;
+  border-bottom: 2px solid #1e293b;
+  font-weight: 600;
+}
+
+/* Main area */
+.main {
+  background-color: #1e293b; /* slate-900 */
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-left: 2px solid #334155;
+}
+
+.save-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#save-button {
+  background-color: #475569; /* slate-600 */
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  color: white;
+  cursor: pointer;
+}
+
+#save-button:hover {
+  background-color: #374151; /* slate-700 */
+}
+
+/* Note title */
+.note-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  outline: none;
+}
+
+/* Note body */
+.note-body {
+  outline: none;
+}
+
+/* Sidebar notes list */
+.note-item {
+  padding-left: 12px;
+  margin-top: 4px;
+}
+
+.note-item-header {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.expand-toggle {
+  cursor: pointer;
+}
+
+.note-item-title {
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.note-item-title:hover {
+  background-color: #374151; /* slate-700 */
+}
