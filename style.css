@@ -9,26 +9,35 @@ body {
   display: grid;
   grid-template-columns: 1fr 5fr;
   height: 100vh;
-  background-color: #0f172a; /* slate-950 */
+  background-color: #0f172a;
+  /* slate-950 */
 }
 
 /* Sidebar */
 .sidebar {
   overflow-y: auto;
-  border-right: 2px solid #1e293b; /* darker border */
+  border-right: 2px solid #1e293b;
+  /* darker border */
   padding: 0;
 }
 
 .sidebar-title {
   padding: 10px 15px;
   margin: 0 0 10px 0;
-  border-bottom: 2px solid #1e293b;
   font-weight: 600;
+}
+
+.sidebar-title-box {
+  border-bottom: 2px solid #1e293b;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
 }
 
 /* Main area */
 .main {
-  background-color: #1e293b; /* slate-900 */
+  background-color: #1e293b;
+  /* slate-900 */
   padding: 20px 40px;
   display: flex;
   flex-direction: column;
@@ -36,22 +45,44 @@ body {
   border-left: 2px solid #334155;
 }
 
-.save-button-container {
+.button-container {
   display: flex;
   justify-content: flex-end;
 }
 
-#save-button {
-  background-color: #475569; /* slate-600 */
+.button {
+  background-color: #475569;
+  /* slate-600 */
   border: none;
   border-radius: 5px;
-  padding: 6px 12px;
   color: white;
   cursor: pointer;
 }
+button:hover {
+  background-color: #475569a4;
+}
+
+#new-button {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 12px;
+}
+
+#save-button {
+  padding: 6px 12px;
+}
 
 #save-button:hover {
-  background-color: #374151; /* slate-700 */
+  background-color: #374151;
+}
+
+#delete-button {
+  padding: 6px 12px;
+  background-color: hwb(0 0% 0% / 0.979);
+}
+
+#delete-button:hover {
+  background-color: hwb(0 0% 0% / 0.74);
 }
 
 /* Note title */
@@ -90,5 +121,6 @@ body {
 }
 
 .note-item-title:hover {
-  background-color: #374151; /* slate-700 */
+  background-color: #374151;
+  /* slate-700 */
 }

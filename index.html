@@ -11,16 +11,22 @@
 <body>
   <div class="container">
     <div class="sidebar" id="notesList">
-      <h2 class="sidebar-title">Notes</h2>
+      <div class="sidebar-title-box">
+        <h2 class="sidebar-title" style="cursor: pointer;" onclick="deselectNote()">Notes</h2>
+        <button id="new-button" class="button" onclick="addNewNote()">+</button>
+      </div>
       <div id="0-children"></div>
     </div>
 
     <div id="selectedNote" class="main">
-      <div class="save-button-container">
-        <button id="save-button" onclick="saveNotes()" style="visibility: hidden;">Save</button>
+      <div class="button-container">
+        <div>
+          <button class="button" id="save-button" onclick="saveNotes()" style="visibility: hidden;">Save Changes</button>
+          <button id="delete-button" class="button" onClick="deleteSelectedNote()" style="visibility: hidden;">delete</button>
+        </div>
       </div>
-      <h2 contenteditable id="selectedNoteTitle" class="note-title"></h2>
-      <p contenteditable id="selectedNoteBody" class="note-body"></p>
+      <h2 contenteditable id="selectedNoteTitle" style="display: none;" class="note-title"></h2>
+      <p contenteditable id="selectedNoteBody" style="display: none;" class="note-body"></p>
     </div>
   </div>
 </body>

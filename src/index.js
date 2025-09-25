@@ -14,7 +14,8 @@ class NotesManager {
       noteId: 0,
       title: "",
       body: "",
-      children: []
+      children: [],
+      parent: null
     });
 
     this.noteMap = {}
@@ -31,11 +32,14 @@ class NotesManager {
 
   addChildNoteTo(id, title, body) {
 
+    console.log(this.noteMap[id].noteId)
+
     let note = new Note({
       noteId: this.n,
       title: title,
       body: body,
-      children: []
+      children: [],
+      parent: this.noteMap[id]
     });
 
     this.noteMap[id]?.addChildNote(note);
@@ -43,14 +47,22 @@ class NotesManager {
   }
 
   serialize() {
-    let serialized = JSON.stringify(this.root.serialize());
+
+    let data = {
+      "n" : this.n,
+      "root" : this.root.serialize()
+    }
+
+    let serialized = JSON.stringify(data);
     localStorage.setItem(localStorageLocation, serialized);
     return serialized;
   }
 
   // deserialize the json string to form the notes hierarchy from it.
   deserialize(inputData) {
-    this.root = this.root.deserialize(inputData, this.noteMap) ?? this.root;
+    let data = JSON.parse(inputData);
+    this.n = data.n;
+    this.root = this.root.deserialize(JSON.stringify(data.root), this.noteMap) ?? this.root;
     return this.root;
   }
 
@@ -66,22 +78,26 @@ class NotesManager {
 
 class Note {
 
-  noteId
-  title
-  body
-  children // Child Notes
+  noteId;
+  title;
+  body;
+  children; // Child Notes
+  parent;
+
 
   constructor({
     noteId,
     title,
     body,
-    children
+    children,
+    parent
   }) {
 
     this.noteId = noteId;
     this.title = title;
     this.body = body;
     this.children = children;
+    this.parent = parent;
   }
 
   updateHeading(newHeading) {
@@ -118,6 +134,12 @@ class Note {
     }
 
     return false;
+  }
+
+  delete() {
+    console.log(this.noteId)
+    if (this.parent)
+    return this.parent.deleteChildNote(this.noteId);
   }
 
   serialize() {
@@ -158,6 +180,12 @@ class Note {
     note.children = JSON.parse(note.children).map((c) => this.deserialize(c, noteMap)).filter((n) => n != null);
 
     noteMap[note.noteId] = new Note(note);
+
+    note.children = note.children.map((c) => {
+      c.parent = noteMap[note.noteId];
+      return c;
+    })
+
     return noteMap[note.noteId];
   }
 
@@ -175,34 +203,38 @@ class Note {
   }
 }
 
+
+
+
+
+
+
 // setup
 let nm = NotesManager.getInstance();
 
 if (localStorage.getItem(localStorageLocation) != null) {
   nm.deserialize(localStorage.getItem(localStorageLocation));
-} else {
+}
 
-  // dummy data
-  for (let i = 0; i < 5; i++) {
-    for (let j = 0; j < 5; j++) {
-      nm.addChildNoteTo(i, "note " + j, "test body");
-      // for (let k = 0; k < 5; k++) {
-      //   nm.addChildNoteTo(j, "note " + k, "test body");
-      // }
-    }
+
+
+function updateUI() {
+  let testElement = document.getElementById("0-children");
+
+  if (testElement !== null) {
+    testElement.innerHTML = nm.getHTMLChildren();
   }
-
-  console.log("[MESSSGE] notes serialized");
-  nm.serialize();
 }
 
-const testElement = document.getElementById("0-children");
-if (testElement !== null) {
-  testElement.innerHTML = nm.getHTMLChildren();
-}
+updateUI()
 
-function hi() {
-  console.log("hi");
+function resetNoteDisplay() {
+  
+  let titleElement = document.getElementById("selectedNoteTitle");
+  let bodyElement = document.getElementById("selectedNoteBody");
+
+  titleElement.innerText = "";
+  bodyElement.innerText = "";
 }
 
 function expandContractChildren(noteId) {
@@ -234,20 +266,50 @@ function selectNote(id) {
   let bodyElement = document.getElementById("selectedNoteBody");
 
   if (titleElement && bodyElement) {
+
+    titleElement.style = ""
+    bodyElement.style = ""
+
     titleElement.innerText = note.title;
     bodyElement.innerText = note.body;
 
     SelectedNote = note;
 
     document.getElementById("save-button").style = ""
+    document.getElementById("delete-button").style = ""
   }
 }
 
 function saveNotes() {
   nm.serialize();
+  updateUI();
 }
 
-// update SelectedNote values on changes made to div
+function addNewNote() {
+  console.log(SelectedNote);
+  if (!SelectedNote) {
+    nm.addChildNoteTo(0, "Title " + nm.n, "Body");
+  } else {
+    nm.addChildNoteTo(SelectedNote.noteId, "Title " + nm.n, "Body");
+  }
+
+  updateUI()
+}
+
+function deleteSelectedNote() {
+  if (SelectedNote) {
+    SelectedNote.delete();
+  }
+  SelectedNote = null;
+  updateUI();
+  resetNoteDisplay()
+}
+
+function deselectNote() {
+  SelectedNote = null;
+  resetNoteDisplay();
+}
+
 const selectedNoteBody = document.getElementById("selectedNoteBody");
 const selectedNoteTitle = document.getElementById("selectedNoteTitle");
 
