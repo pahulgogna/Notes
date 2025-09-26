@@ -203,12 +203,6 @@ class Note {
   }
 }
 
-
-
-
-
-
-
 // setup
 let nm = NotesManager.getInstance();
 
@@ -216,13 +210,11 @@ if (localStorage.getItem(localStorageLocation) != null) {
   nm.deserialize(localStorage.getItem(localStorageLocation));
 }
 
-
-
 function updateUI() {
-  let testElement = document.getElementById("0-children");
+  let rootElement = document.getElementById("0-children");
 
-  if (testElement !== null) {
-    testElement.innerHTML = nm.getHTMLChildren();
+  if (rootElement !== null) {
+    rootElement.innerHTML = nm.getHTMLChildren();
   }
 }
 
@@ -280,6 +272,11 @@ function selectNote(id) {
   }
 }
 
+function deselectNote() {
+  SelectedNote = null;
+  resetNoteDisplay();
+}
+
 function saveNotes() {
   nm.serialize();
   updateUI();
@@ -303,11 +300,6 @@ function deleteSelectedNote() {
   SelectedNote = null;
   updateUI();
   resetNoteDisplay()
-}
-
-function deselectNote() {
-  SelectedNote = null;
-  resetNoteDisplay();
 }
 
 const selectedNoteBody = document.getElementById("selectedNoteBody");
