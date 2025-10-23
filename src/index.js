@@ -203,7 +203,6 @@ class Note {
   }
 }
 
-// setup
 let nm = NotesManager.getInstance();
 
 if (localStorage.getItem(localStorageLocation) != null) {

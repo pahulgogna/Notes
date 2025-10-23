@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Notes</title>
+    <script src="./src/index.js" defer></script>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body>
+
+    <header style="display:flex;align-items:center;justify-content:space-between;padding:16px 36px;background:transparent;">
+            <div>
+                <div style="font-weight:700;font-size:18px;line-height:1;cursor: pointer;" onclick="deselectNote()">Notes</div>
+                <div style="font-size:12px;color:#475569;margin-top:2px;">Hierarchical, local-first notes</div>
+            </div>
+    </header>
+
+    <div class="container">
+        <div class="sidebar" id="notesList">
+            <div class="sidebar-title-box">
+                <button id="new-button" class="button" onclick="addNewNote()">+</button>
+            </div>
+            <div id="0-children"></div>
+        </div>
+
+        <div id="selectedNote" class="main">
+            <div class="button-container">
+                <div>
+                    <button class="button" id="save-button" onclick="saveNotes()" style="visibility: hidden;">Save
+                        Changes</button>
+                    <button id="delete-button" class="button" onClick="deleteSelectedNote()"
+                        style="visibility: hidden;">delete</button>
+                </div>
+            </div>
+            <h2 contenteditable id="selectedNoteTitle" style="display: none;" class="note-title"></h2>
+            <p contenteditable id="selectedNoteBody" style="display: none;" class="note-body"></p>
+        </div>
+    </div>
+</body>
+
+</html>
